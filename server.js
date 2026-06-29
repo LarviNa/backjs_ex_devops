@@ -20,10 +20,14 @@ async function initDB() {
             host: process.env.DB_HOST,
             port: process.env.DB_PORT,
             user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME
+            password: process.env.DB_PASSWORD
         });
-        console.log('Connected to MySQL database');
+        console.log('Connected to MySQL server');
+
+        // Create database if not exists
+        await db.execute(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'eval_db'}\``);
+        await db.changeUser({ database: process.env.DB_NAME || 'eval_db' });
+        console.log(`Connected to MySQL database: ${process.env.DB_NAME || 'eval_db'}`);
         
         // Create users table if not exists
         await db.execute(`
